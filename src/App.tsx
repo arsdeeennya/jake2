@@ -1,18 +1,31 @@
 import axios from 'axios';
 import React,{useState} from 'react';
+import {Todo} from './components/Todo';
 import './App.css';
 
-function App() {
-  const [todos, setTodos] = useState<any>('vvvvvv')
+type TodoType = {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
+}
 
-  const onClick = () => {
-    axios.get('https://jsonplaceholder.typicode.com/posts')
-    .then((res) => setTodos('aaaaa'))
-  }
+function App() {
+  const [todos, setTodos] = useState<Array<TodoType>>([]);
+
+  const onClickFetchData = () => {
+    axios.get<Array<TodoType>>('https://jsonplaceholder.typicode.com/todos')
+    .then((res) => {setTodos(res.data)});
+  };
 
   return (
     <div className='App'>
-      <button onClick={onClick}>{todos}</button>
+      <button onClick={onClickFetchData}>じｋっく</button>
+      {todos.map((todo: TodoType, index: number) =>(
+        <div key={index}>
+          <Todo title={todo.title} userId={todo.userId} completed={todo.completed}/>
+        </div>
+      ))}
     </div>
   );
 }
